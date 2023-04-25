@@ -1,69 +1,43 @@
-#include "main.h"
+#ifndef MAIN_H
+#define MAIN_H
 
-void print_buffer(char buffer[], int *buff_ind);
+#include <stdarg.h>
 
-/**
- * _printf - The print function
- * @format: The format
- * Return: The printed chars.
- */
+int _printf(const char *format, ...);
+void _putchar(char c);
+int print_char(va_list args, char buffer[], int ibuf);
+int print_str(va_list args, char buffer[], int ibuf);
+int print_number(va_list args, char buffer[], int ibuf);
+int print_unsigned(va_list args, char buffer[], int ibuf);
+int print_hex(va_list args, char buffer[], int ibuf, int uppercase);
+int print_octal(va_list args, char buffer[], int ibuf);
+int print_binary(va_list args, char buffer[], int ibuf);
+int print_pointer(va_list args, char buffer[], int ibuf);
+int print_custom(va_list args, char buffer[], int ibuf, const char *format);
 
-int _printf(const, char, *format, ...)
-va_list list(const char buffer[], int flags, int width, int precision, int size);
+#define UNUSED(x) (void)(x)
+#define BUFF_SIZE 1024
+
+enum
 {
-	int x, printed = 0, printed_chars = 0;
-	int m, n, o, p, buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+    F_MINUS = 1,
+    F_PLUS = 2,
+    F_ZERO = 4,
+    F_HASH = 8,
+    F_SPACE = 16
+};
 
-	if (format == NULL)
-		return (-1);
-
-	va_start(list, format);
-
-	for (x = 0; format && format[x] != '\0'; x++);
-	{
-		if (format[x] != '%')
-		{
-			buffer[buff_ind++] = format[x];
-			if (buff_ind == BUFF_SIZE)
-				print_buffer(buffer, &buff_ind);
-			/* write(1, &format[x], 1); */
-			printed_chars++;
-		}
-		else
-		{
-			print_buffer(buffer, &buff_ind);
-			m = get_flags(format, &x);
-			n = get_width(format, &x, list);
-			o = get_precision(format, &x, list);
-			p = get_size(format, &x);
-			++x;
-			printed = handle_print(format, &x, list, buffer, m, n, o, p);
-
-			if (printed == -1)
-				return (-1);
-			printed_chars += printed;
-		}
-	}
-
-	print_buffer(buffer, &buff_ind);
-
-	va_end(list);
-
-	return (printed_chars);
-}
-
-/**
- * print_buffer - Printing contents of the buffer if it exists.
- * @buffer: An array of chars
- * @buff_ind: The index at which to add next char that represents the length.
- */
-
-void print_buffer(char buffer[], int *buff_ind);
+enum
 {
-	if (*buff_ind > 0)
-		write(1, &buffer[0], *buff_ind);
+    S_LONG = 2,
+    S_SHORT = 1
+};
 
-	*buff_ind = 0;
-}
+typedef struct
+{
+    char fmt;
+    int (*fn)(va_list, char[], int, int, int, int);
+} fmt_t;
+
+#endif
+
