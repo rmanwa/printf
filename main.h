@@ -2,7 +2,8 @@
 #define MAIN_H
 
 #include <stdarg.h>
-
+#include <stdio.h>
+#include <string.h>
 int _printf(const char *format, ...);
 void _putchar(char c);
 int print_char(va_list args, char buffer[], int ibuf);
@@ -38,6 +39,23 @@ typedef struct
     char fmt;
     int (*fn)(va_list, char[], int, int, int, int);
 } fmt_t;
+int _printf(const char *format, ...);
+int print_c(va_list arg);
+int print_s(va_list arg);
+int print_d(va_list arg);
+int print_i(va_list arg);
+
+/**
+ * struct print - Struct print
+ *
+ * @type: The format.
+ * @f: The function associated.
+ */
+typedef struct print
+{
+    char *type;
+    int (*f)(va_list);
+} print_t;
 
 #endif
 
